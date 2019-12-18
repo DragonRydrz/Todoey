@@ -12,7 +12,7 @@ import CoreData
 class CategoryViewController: UITableViewController {
 
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    let categoryArray = [Category]()
+    var categoryArray = [Category]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,14 +23,52 @@ class CategoryViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return categoryArray.count
     }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        
+        cell.textLabel?.text = self.categoryArray[indexPath.row].name
+        
+        
+        return cell
+    }
+    
+    
+    
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        var textField = UITextField();
+        let alert = UIAlertController(title: "Add new Category", message: "", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { (acton) in
+            
+            if (textField.text != "") {
+                
+                let newCategory = Category(context: self.context)
+                newCategory.name = textField.text!
+                print(newCategory)
+                self.categoryArray.append(newCategory)
+                self.saveCategories()
+                self.tableView.reloadData()
+            }
+            
+        }
+        
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Create New Item"
+            textField = alertTextField
+        }
+        
+        alert.addAction(action)
+        
+        present(alert, animated: true, completion: nil)
+        
     }
     
     //MARK - TableView Data Methods
@@ -39,5 +77,13 @@ class CategoryViewController: UITableViewController {
     
     //MARK - Data Manipulation Methods
     
+    func saveCategories() -> Void {
+        do {
+            try context.save()
+            tableView.reloadData()
+        } catch {
+            print("Error Saving Context: \(error)")
+        }
+    }
     
 }
