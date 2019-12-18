@@ -14,6 +14,7 @@
 		191F72792399FA7F004E3909 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 191F72782399FA7F004E3909 /* Assets.xcassets */; };
 		191F727C2399FA7F004E3909 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 191F727A2399FA7F004E3909 /* LaunchScreen.storyboard */; };
 		191F728A239C2F49004E3909 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 191F7289239C2F49004E3909 /* Default-568h@2x.png */; };
+		19B8C5AE23A84DDC003DB24D /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B8C5AD23A84DDC003DB24D /* CategoryViewController.swift */; };
 		646C791123A02C6400A91E63 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 646C790F23A02C6400A91E63 /* DataModel.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +28,7 @@
 		191F727B2399FA7F004E3909 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		191F727D2399FA7F004E3909 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		191F7289239C2F49004E3909 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		19B8C5AD23A84DDC003DB24D /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		646C791023A02C6400A91E63 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -83,6 +85,7 @@
 		191F7286239C2EAC004E3909 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				19B8C5AD23A84DDC003DB24D /* CategoryViewController.swift */,
 				191F72732399FA7E004E3909 /* TodoeyTableViewController.swift */,
 			);
 			path = Controllers;
@@ -169,6 +172,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19B8C5AE23A84DDC003DB24D /* CategoryViewController.swift in Sources */,
 				646C791123A02C6400A91E63 /* DataModel.xcdatamodeld in Sources */,
 				191F72742399FA7E004E3909 /* TodoeyTableViewController.swift in Sources */,
 				191F72702399FA7E004E3909 /* AppDelegate.swift in Sources */,

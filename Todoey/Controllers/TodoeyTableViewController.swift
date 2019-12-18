@@ -7,13 +7,14 @@
 //
 
 import UIKit
+import CoreData
 
 class TodoeyTableViewController: UITableViewController {
 
     var itemArray = [Item]()
     
-    let defaults = UserDefaults.standard
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+//    let defaults = UserDefaults.standard
+//    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     
@@ -21,7 +22,7 @@ class TodoeyTableViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-//        loadItems()
+        loadItems()
         
 //        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
 //            itemArray = items
@@ -51,10 +52,12 @@ class TodoeyTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        print("Item selected was \(itemArray[indexPath.row]), at index \(indexPath.row)")
+//        context.delete(itemArray[indexPath.row])
+//        itemArray.remove(at: indexPath.row)
         
         itemArray[indexPath.row].complete = !itemArray[indexPath.row].complete
         self.saveItems()
-        tableView.reloadData()
+        
         
 //        if (tableView.cellForRow(at: indexPath)?.accessoryType == UITableViewCell.AccessoryType.none) {
 //            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
@@ -65,6 +68,8 @@ class TodoeyTableViewController: UITableViewController {
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    
     
     //MARK - Add new items
     
@@ -101,27 +106,50 @@ class TodoeyTableViewController: UITableViewController {
         
         do {
             try context.save()
-            
+            tableView.reloadData()
         } catch {
             print("Error saving Context: \(error)")
         }
     }
     
-//    func loadItems() -> Void {
-//
-//        if let data = try? Data(contentsOf: dataFilePath!) {
-//
-//
-//            let decoder = PropertyListDecoder()
-//            do {
-//                itemArray = try decoder.decode([Item].self, from: data)
-//            } catch {
-//
-//                print("Error decoding data: \(error)")
-//            }
-//        }
-//    }
-    
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) -> Void {
 
+        //let request: NSFetchRequest<Item> = Item.fetchRequest()
+        do {
+            itemArray = try context.fetch(request)
+            tableView.reloadData()
+        } catch {
+            print("Error fetching data: \(error)")
+        }
+        
+        
+    }
 }
-
+//MARK: - Search Bar Methods
+extension TodoeyTableViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        loadItems(with: request)
+//        do {
+//            itemArray = try context.fetch(request)
+//            tableView.reloadData()
+//        } catch {
+//            print("Error fetching data: \(error)")
+//        }
+    }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if (searchBar.text?.count == 0) {
+            loadItems()
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            
+        }
+    }
+    
+}
