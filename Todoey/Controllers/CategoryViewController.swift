@@ -16,6 +16,7 @@ class CategoryViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadItems()
 
     }
 
@@ -52,7 +53,6 @@ class CategoryViewController: UITableViewController {
                 
                 let newCategory = Category(context: self.context)
                 newCategory.name = textField.text!
-                print(newCategory)
                 self.categoryArray.append(newCategory)
                 self.saveCategories()
                 self.tableView.reloadData()
@@ -83,6 +83,15 @@ class CategoryViewController: UITableViewController {
             tableView.reloadData()
         } catch {
             print("Error Saving Context: \(error)")
+        }
+    }
+    
+    func loadItems (with request: NSFetchRequest<Category> = Category.fetchRequest()) -> Void {
+        do {
+            categoryArray = try context.fetch(request)
+            tableView.reloadData()
+        } catch {
+            print("Error loading Categories: \(error)")
         }
     }
     
