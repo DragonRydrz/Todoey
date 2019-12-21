@@ -16,7 +16,7 @@ class CategoryViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadItems()
+        loadCategories()
 
     }
 
@@ -75,6 +75,17 @@ class CategoryViewController: UITableViewController {
     
     //MARK - TableView Delegate Methods
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "goToItems", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destination = segue.destination as! TodoeyTableViewController
+        if let indexPath = tableView.indexPathForSelectedRow {
+            destination.selectedCategory = self.categoryArray[indexPath.row]
+        }
+    }
+    
     //MARK - Data Manipulation Methods
     
     func saveCategories() -> Void {
@@ -86,7 +97,7 @@ class CategoryViewController: UITableViewController {
         }
     }
     
-    func loadItems (with request: NSFetchRequest<Category> = Category.fetchRequest()) -> Void {
+    func loadCategories (with request: NSFetchRequest<Category> = Category.fetchRequest()) -> Void {
         do {
             categoryArray = try context.fetch(request)
             tableView.reloadData()
