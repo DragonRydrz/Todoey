@@ -7,16 +7,17 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class CategoryViewController: UITableViewController {
 
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var categoryArray = [Category]()
+    let realm = try! Realm()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadCategories()
+//        loadCategories()
 
     }
 
@@ -51,10 +52,10 @@ class CategoryViewController: UITableViewController {
             
             if (textField.text != "") {
                 
-                let newCategory = Category(context: self.context)
+                let newCategory = Category()
                 newCategory.name = textField.text!
                 self.categoryArray.append(newCategory)
-                self.saveCategories()
+                self.save(category: newCategory)
                 self.tableView.reloadData()
             }
             
@@ -88,22 +89,24 @@ class CategoryViewController: UITableViewController {
     
     //MARK - Data Manipulation Methods
     
-    func saveCategories() -> Void {
+    func save(category: Category) -> Void {
         do {
-            try context.save()
+            try realm.write {
+                realm.add(category)
+            }
             tableView.reloadData()
         } catch {
             print("Error Saving Context: \(error)")
         }
     }
     
-    func loadCategories (with request: NSFetchRequest<Category> = Category.fetchRequest()) -> Void {
-        do {
-            categoryArray = try context.fetch(request)
-            tableView.reloadData()
-        } catch {
-            print("Error loading Categories: \(error)")
-        }
-    }
+//    func loadCategories (with request: NSFetchRequest<Category> = Category.fetchRequest()) -> Void {
+//        do {
+//            categoryArray = try context.fetch(request)
+//            tableView.reloadData()
+//        } catch {
+//            print("Error loading Categories: \(error)")
+//        }
+//    }
     
 }
