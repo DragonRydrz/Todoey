@@ -11,32 +11,29 @@ import RealmSwift
 
 class CategoryViewController: UITableViewController {
 
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    var categoryArray = [Category]()
+    var categories: Results<Category>?
     let realm = try! Realm()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        loadCategories()
+        loadCategories()
 
     }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return categoryArray.count
+        return categories?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
         
-        cell.textLabel?.text = self.categoryArray[indexPath.row].name
+        cell.textLabel?.text = self.categories?[indexPath.row].name ?? "No Categories Added"
         
         
         return cell
@@ -54,7 +51,7 @@ class CategoryViewController: UITableViewController {
                 
                 let newCategory = Category()
                 newCategory.name = textField.text!
-                self.categoryArray.append(newCategory)
+//                self.categories.append(newCategory)
                 self.save(category: newCategory)
                 self.tableView.reloadData()
             }
@@ -83,7 +80,7 @@ class CategoryViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destination = segue.destination as! TodoeyTableViewController
         if let indexPath = tableView.indexPathForSelectedRow {
-            destination.selectedCategory = self.categoryArray[indexPath.row]
+            destination.selectedCategory = self.categories?[indexPath.row]
         }
     }
     
@@ -100,13 +97,8 @@ class CategoryViewController: UITableViewController {
         }
     }
     
-//    func loadCategories (with request: NSFetchRequest<Category> = Category.fetchRequest()) -> Void {
-//        do {
-//            categoryArray = try context.fetch(request)
-//            tableView.reloadData()
-//        } catch {
-//            print("Error loading Categories: \(error)")
-//        }
-//    }
+    func loadCategories () -> Void {
+        categories = realm.objects(Category.self)
+    }
     
 }
