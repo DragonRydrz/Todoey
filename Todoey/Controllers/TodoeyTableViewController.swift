@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class TodoeyTableViewController: UITableViewController {
+class TodoeyTableViewController: SwipeTableViewController {
 
     let realm = try! Realm()
     var todoItems: Results<Item>?
@@ -31,7 +31,7 @@ class TodoeyTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = todoItems?[indexPath.row] {
         
@@ -105,6 +105,18 @@ class TodoeyTableViewController: UITableViewController {
     func loadItems() -> Void {
         todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
         tableView.reloadData()
+    }
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let item = todoItems?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    self.realm.delete(item)
+                }
+            } catch {
+                print("Error deleting item: \(error)")
+            }
+        }
     }
 }
 //MARK: - Search Bar Methods
