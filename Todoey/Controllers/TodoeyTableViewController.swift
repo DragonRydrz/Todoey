@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class TodoeyTableViewController: SwipeTableViewController {
 
@@ -22,8 +23,17 @@ class TodoeyTableViewController: SwipeTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loadItems()
+        tableView.separatorStyle = .none
+        
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        if let colorHex = selectedCategory?.color {
+            title = selectedCategory!.name
+            guard let navBar = navigationController?.navigationBar else { fatalError("Nav bar does not exist") }
+            navBar.barTintColor = UIColor(hexString: colorHex)
+        }
+    }
     //MARK - TabelView Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -36,6 +46,11 @@ class TodoeyTableViewController: SwipeTableViewController {
         if let item = todoItems?[indexPath.row] {
         
             cell.textLabel?.text = item.title
+            if let color = UIColor(hexString: selectedCategory!.color)?.darken(byPercentage: (CGFloat(indexPath.row) / CGFloat(todoItems!.count))) {
+                cell.backgroundColor = color
+                cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+            }
+            
         
             cell.accessoryType = item.complete ? .checkmark : .none
         } else {
