@@ -32,6 +32,9 @@ class TodoeyTableViewController: SwipeTableViewController {
             title = selectedCategory!.name
             guard let navBar = navigationController?.navigationBar else { fatalError("Nav bar does not exist") }
             navBar.barTintColor = UIColor(hexString: colorHex)
+            if let tint = navBar.barTintColor {
+                navBar.tintColor = ContrastColorOf(tint, returnFlat: true)
+            }
         }
     }
     //MARK - TabelView Datasource Methods

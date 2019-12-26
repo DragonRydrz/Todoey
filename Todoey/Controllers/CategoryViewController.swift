@@ -20,6 +20,16 @@ class CategoryViewController: SwipeTableViewController {
         loadCategories()
         tableView.separatorStyle = .none
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        guard let navBar = navigationController?.navigationBar else { fatalError("Error loading nav bar in Category Controller")}
+//        navBar.prefersLargeTitles = true
+        if let tint = navBar.barTintColor {
+            navBar.tintColor = ContrastColorOf(tint, returnFlat: true)
+            print("Nav Bar tint color is \(tint.hexValue())")
+        }
+        
+    }
 
     // MARK: - Table view data source
 
